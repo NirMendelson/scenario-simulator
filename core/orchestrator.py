@@ -52,31 +52,40 @@ def _ask_single(llm: BaseChatModel, expert: str, prompt_context: str, debug: boo
 	)
 
 
+
 def build_two_round_tree(llm: BaseChatModel, scenario: str, debug: bool = False) -> str:
-	# Round 1: one suggestion per expert
-	level1 = [
-		_ask_single(llm, "geo", scenario, debug=debug),
-		_ask_single(llm, "econ", scenario, debug=debug),
-		_ask_single(llm, "tech", scenario, debug=debug),
-		_ask_single(llm, "social", scenario, debug=debug),
-	]
+	# Round 1 via LLM moderation: collect 3 outcomes per expert and pick distinct 4
+	geo_json = ask_geo_expert(llm, scenario, debug=debug)
+	econ_json = ask_econ_expert(llm, scenario, debug=debug)
+	tech_json = ask_tech_expert(llm, scenario, debug=debug)
+	social_json = ask_social_expert(llm, scenario, debug=debug)
+	from core.schema import FinalSelection
+	import json as _json
+	level1_json = moderate_and_select(geo_json, econ_json, tech_json, social_json, scenario, llm=llm, debug=debug)
+	fs: FinalSelection = FinalSelection(**_json.loads(level1_json))
+	level1 = [TreeNode(expert=None, outcome=o.outcome, explanation=o.explanation, profit=o.profit) for o in fs.selected_outcomes]
 
-	# Profit map level-1 as well
+	# Round 2: for each level-1, all 4 experts add one child, then LLM-moderate siblings
 	for parent in level1:
-		p = map_profit_for_outcome(llm, parent.outcome, debug=debug)
-		try:
-			parent.profit = p if isinstance(p, Profit) else Profit(**p)
-		except Exception:
-			pass
-
-	# Round 2: for each level-1, all 4 experts add one child
-	for parent in level1:
-		children = [
+		draft_children = [
 			_ask_single(llm, "geo", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
 			_ask_single(llm, "econ", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
 			_ask_single(llm, "tech", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
 			_ask_single(llm, "social", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
 		]
+		# LLM sibling moderation
+		from json import dumps as _dumps, loads as _loads
+		step_system = (
+			"You moderate child outcomes for a parent. Remove or merge near-duplicates and anything that restates the parent. "
+			"Return exactly 4 distinct children. Output only JSON: {\"children\":[{\"outcome\":\"...\",\"explanation\":\"...\"}]}"
+		)
+		step_user = f"Parent: {parent.outcome}\nCandidates: " + _dumps([{ "outcome": c.outcome, "explanation": c.explanation } for c in draft_children], ensure_ascii=False)
+		resp = llm.invoke([("system", step_system), ("user", step_user)])
+		try:
+			mod_children = _loads(resp.content or "").get("children", [])
+		except Exception:
+			mod_children = [{ "outcome": c.outcome, "explanation": c.explanation } for c in draft_children]
+		children = [TreeNode(expert=None, outcome=mc.get("outcome",""), explanation=mc.get("explanation","")) for mc in mod_children][:4]
 		# Profit map each leaf
 		for leaf in children:
 			p = map_profit_for_outcome(llm, leaf.outcome, debug=debug)

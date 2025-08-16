@@ -4,6 +4,9 @@ import 'reactflow/dist/style.css'
 import dagre from 'dagre'
 
 const primaryColor = '#58a6ff'
+const nodeFontSize = 18
+const nodeLineHeight = 22
+const titleFontSize = 18
 
 function toTree(json) {
   if (json?.children) {
@@ -34,15 +37,25 @@ function measureMaxHeight(tree) {
   container.style.visibility = 'hidden'
   container.style.width = `${nodeWidth - 20}px`
   container.style.padding = '10px'
-  container.style.lineHeight = '16px'
-  container.style.fontSize = '12px'
-  container.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'
+  container.style.lineHeight = `${nodeLineHeight}px`
+  container.style.fontSize = `${nodeFontSize}px`
+  container.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif'
   container.style.background = '#0b0e14'
   document.body.appendChild(container)
 
   const samples = []
   samples.push({ title: 'Scenario', body: tree.scenario })
-  ;(tree.nodes || []).forEach((n) => samples.push({ title: 'Outcome', body: n.outcome }))
+  // Include only outcomes for height measurement
+  if (tree.children) {
+    (tree.children || []).forEach((n) => {
+      samples.push({ title: 'Outcome', body: n.outcome })
+      ;(n.children || []).forEach((c) => {
+        samples.push({ title: 'Outcome', body: c.outcome })
+      })
+    })
+  } else {
+    ;(tree.nodes || []).forEach((n) => samples.push({ title: 'Outcome', body: n.outcome }))
+  }
 
   let max = 120
   samples.forEach((s) => {
@@ -68,7 +81,6 @@ function makeFlowElements(data, nodeHeight) {
     sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
   })
 
-  const arrow = { type: MarkerType.ArrowClosed, color: '#e6eaf0' }
   const edgeStyle = { stroke: '#e6eaf0' }
 
   // level 1
@@ -77,21 +89,21 @@ function makeFlowElements(data, nodeHeight) {
     const id = `l1-${i}`
     nodes.push({
       id,
-      data: { title: 'Outcome', body: n.outcome, explanation: n.explanation },
+      data: { title: 'Outcome', body: n.outcome, explanation: n.explanation, profit: n.profit },
       style: commonNodeStyle(`1px solid ${primaryColor}`),
       sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
     })
-    edges.push({ id: `e-root-${id}`, source: 'root', target: id, type: 'straight', markerEnd: arrow, style: edgeStyle })
+    edges.push({ id: `e-root-${id}`, source: 'root', target: id, type: 'straight', style: edgeStyle })
     // level 2 (leaves)
     ;(n.children || []).forEach((c, j) => {
       const cid = `l2-${i}-${j}`
       nodes.push({
         id: cid,
-        data: { title: 'Outcome', body: `${c.outcome}\n${c.profit?.idea ? `(${c.profit.idea})` : ''}`.trim(), explanation: c.explanation, profit: c.profit },
+        data: { title: 'Outcome', body: c.outcome, explanation: c.explanation, profit: c.profit },
         style: commonNodeStyle(`1px solid ${primaryColor}`),
         sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
       })
-      edges.push({ id: `e-${id}-${cid}`, source: id, target: cid, type: 'straight', markerEnd: arrow, style: edgeStyle })
+      edges.push({ id: `e-${id}-${cid}`, source: id, target: cid, type: 'straight', style: edgeStyle })
     })
   })
 
@@ -102,10 +114,11 @@ function makeFlowElements(data, nodeHeight) {
 function NodeRenderer({ data }) {
   const color = primaryColor
   return (
-    <div style={{ height: '100%', padding: 10, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <div style={{ height: '100%', padding: 10, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center', fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif' }}>
       <Handle type="target" position={Position.Top} style={{ background: color, border: 'none' }} />
-      <div style={{ fontSize: 12, marginBottom: 4, color, textAlign: 'center' }}><b>{data.title}</b></div>
-      <div style={{ fontSize: 12, color: '#f2f5f8', lineHeight: '16px', textAlign: 'center', whiteSpace:'pre-wrap' }}>{data.body}</div>
+      <div style={{ fontSize: titleFontSize, marginBottom: 6, color, textAlign: 'center' }}><b>{data.title}</b></div>
+      <div style={{ fontSize: nodeFontSize, color: '#f2f5f8', lineHeight: `${nodeLineHeight}px`, textAlign: 'center', whiteSpace:'pre-wrap' }}>{data.body}</div>
+      {/* trade idea intentionally omitted from node boxes */}
       <Handle type="source" position={Position.Bottom} style={{ background: color, border: 'none' }} />
     </div>
   )
@@ -116,6 +129,7 @@ export default function App() {
   const [elements, setElements] = useState({ nodes: [], edges: [] })
   const [nodeHeight, setNodeHeight] = useState(120)
   const [selected, setSelected] = useState(null)
+  const [panelOpen, setPanelOpen] = useState(true)
 
   useEffect(() => { fetch('/api/tree').then(r => r.json()).then(setJson).catch(console.error) }, [])
 
@@ -135,40 +149,54 @@ export default function App() {
       profitIdea: d.profit?.idea,
       profitExplanation: d.profit?.explanation,
     })
+    setPanelOpen(true)
   }
 
   return (
     <div className="container" style={{ display: 'flex', height: '100%' }}>
-      <div className="panel" style={{ width: 420, padding: 16, borderRight: '1px solid #2a2f3a', background: '#11131a', color: '#fff', overflow: 'auto' }}>
-        {!selected ? (
-          <>
-            <h3 style={{ marginTop:0 }}>Scenario</h3>
-            <div style={{ fontFamily:'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace', whiteSpace:'pre-wrap' }}>{json?.scenario || ''}</div>
-            <p style={{ opacity:.85 }}>Click a node to see full details.</p>
-          </>
-        ) : (
-          <>
-            <h3 style={{ marginTop:0 }}>Details</h3>
-            <h4>Outcome</h4>
-            <div style={{ whiteSpace:'pre-wrap' }}>{selected.outcome}</div>
-            {selected.explanation && <>
-              <h4>Explanation</h4>
-              <div style={{ whiteSpace:'pre-wrap' }}>{selected.explanation}</div>
-            </>}
-            {selected.profitIdea && <>
-              <h4>Profit idea</h4>
-              <div>{selected.profitIdea}</div>
-              {selected.profitExplanation && <div style={{ opacity:.95 }}>{selected.profitExplanation}</div>}
-            </>}
-          </>
-        )}
-      </div>
+      {panelOpen && (
+        <div className="panel" style={{ width: 320, padding: 22, borderRight: '1px solid #2a2f3a', background: '#11131a', color: '#fff', overflow: 'auto', position:'relative', fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif' }}>
+          <button
+            onClick={() => setPanelOpen(false)}
+            aria-label="Close panel"
+            title="Close"
+            style={{ position:'absolute', top: 8, right: 10, background:'transparent', border:'none', color:'#9aa3b2', fontSize:18, cursor:'pointer' }}
+          >×</button>
+          {!selected ? (
+            <>
+              <h3 style={{ marginTop:0, paddingRight:24 }}>Scenario</h3>
+              <div style={{ whiteSpace:'pre-wrap' }}>{json?.scenario || ''}</div>
+              <p style={{ opacity:.85 }}>Click a node to see full details.</p>
+            </>
+          ) : (
+            <>
+              <div style={{ marginTop: 8, marginBottom: 12 }}>
+                <div style={{ fontSize: 18, fontWeight: 700, lineHeight: '22px', color:'#fff', whiteSpace:'pre-wrap' }}>{selected.outcome}</div>
+                {selected.explanation && (
+                  <div style={{ marginTop: 6, color:'#fff', lineHeight: '20px', whiteSpace:'pre-wrap' }}>{selected.explanation}</div>
+                )}
+              </div>
+              {selected.profitIdea && (
+                <div style={{ marginTop: 10 }}>
+                  <div style={{ borderTop: '1px solid #2a2f3a', margin: '10px 0' }} />
+                  <div style={{ fontSize: 18, fontWeight: 700, lineHeight: '22px', color:'#fff', whiteSpace:'pre-wrap' }}>{selected.profitIdea}</div>
+                  {selected.profitExplanation && (
+                    <div style={{ marginTop: 6, color:'#fff', lineHeight: '20px', whiteSpace:'pre-wrap' }}>{selected.profitExplanation}</div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
       <div className="tree" style={{ flex: 1, background:'#0b0e14' }}>
         <ReactFlow
           nodes={elements.nodes.map(n => ({ ...n, type: 'default' }))}
           edges={elements.edges}
           nodeTypes={{ default: NodeRenderer }}
           fitView
+          minZoom={0.05}
+          maxZoom={3}
           onNodeClick={onNodeClick}
         >
           <Background gap={16} color="#2a2f3a" />

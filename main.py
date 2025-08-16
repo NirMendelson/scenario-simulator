@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
 
 from core.orchestrator import build_two_round_tree
+from core.debug import get_logs_text
 
 
 def parse_args() -> argparse.Namespace:
@@ -63,6 +64,16 @@ def main() -> None:
     with out_path.open("w", encoding="utf-8") as f:
         f.write(tree_json)
     print(f"Saved to {out_path}")
+
+    # Save logs
+    logs_dir = out_path.parent / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    import datetime as _dt
+    ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    log_path = logs_dir / f"run-{ts}.log"
+    with log_path.open("w", encoding="utf-8") as lf:
+        lf.write(get_logs_text())
+    print(f"Logs saved to {log_path}")
 
 
 if __name__ == "__main__":

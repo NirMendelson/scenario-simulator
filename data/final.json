@@ -2,204 +2,204 @@
   "scenario": "The US bans the use of TikTok",
   "children": [
     {
-      "expert": "geo",
-      "outcome": "Geopolitical tensions between the US and China rise.",
-      "explanation": "The ban on TikTok, owned by a Chinese company, heightens suspicions of data security and espionage, leading to broader diplomatic friction between the two superpowers.",
+      "expert": null,
+      "outcome": "US-China relations worsen over the ban.",
+      "explanation": "The TikTok ban heightens tensions, leading China to retaliate with restrictions on American tech firms and escalating trade conflicts, including disruptions to global supply chains.",
       "profit": {
-        "idea": "Invest in GLD",
-        "explanation": "Geopolitical tensions may increase demand for gold as a safe-haven asset."
+        "idea": "Invest in XAR",
+        "explanation": "Worsening relations may boost demand for defense sector stocks."
       },
       "children": [
         {
-          "expert": "geo",
-          "outcome": "China imposes retaliatory measures against US companies.",
-          "explanation": "The US ban on TikTok heightens geopolitical tensions, leading China to respond with countermeasures that strain bilateral relations and impact international trade dynamics.",
-          "profit": {
-            "idea": "Invest in FXI",
-            "explanation": "Retaliatory measures may increase demand for Chinese stocks, potentially driving gains."
-          },
-          "children": []
-        },
-        {
-          "expert": "econ",
-          "outcome": "Trade restrictions between the US and China intensify.",
-          "explanation": "The US ban on TikTok heightens economic friction, leading to retaliatory measures that disrupt supply chains and reduce bilateral trade in the short term.",
+          "expert": null,
+          "outcome": "China retaliates by imposing restrictions on US technology exports.",
+          "explanation": "The US ban on TikTok escalates geopolitical tensions, leading China to counter with trade barriers that could disrupt global tech supply chains and influence alliances.",
           "profit": {
             "idea": "Invest in GLD",
-            "explanation": "Trade tensions can boost demand for gold as a safe-haven asset."
+            "explanation": "Gold is often viewed as a safe haven during geopolitical tensions."
           },
           "children": []
         },
         {
-          "expert": "tech",
-          "outcome": "US tech companies develop alternative social media platforms.",
-          "explanation": "The TikTok ban encourages innovation in the US tech industry as firms create secure alternatives to maintain user engagement and address data privacy concerns amid tensions.",
+          "expert": null,
+          "outcome": "Trade between the US and China declines sharply.",
+          "explanation": "The TikTok ban escalates economic tensions, leading to retaliatory measures that reduce bilateral trade volumes and disrupt supply chains in the short term.",
           "profit": {
-            "idea": "Invest in META",
-            "explanation": "Growth in alternative social media may drive demand for tech companies like META."
+            "idea": "Invest in GLD",
+            "explanation": "Declining trade can increase demand for gold as a safe-haven asset."
           },
           "children": []
         },
         {
-          "expert": "social",
-          "outcome": "US citizens protest the TikTok ban on social media.",
-          "explanation": "The ban heightens tensions over free speech and cultural exchange, leading to increased activism among young users and potential shifts in social interactions within the next few months.",
+          "expert": null,
+          "outcome": "Tech companies develop secure alternatives to TikTok.",
+          "explanation": "The US ban on TikTok prompts domestic tech firms to innovate new social media platforms with enhanced data privacy features, fostering competition and reducing reliance on foreign apps in the short term.",
           "profit": {
             "idea": "Invest in META",
-            "explanation": "Protests against TikTok ban may increase demand for competing social media platforms."
+            "explanation": "META's social platforms could benefit from demand for secure TikTok alternatives."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Social divisions grow as US users express anti-China sentiment online.",
+          "explanation": "This outcome arises because the TikTok ban heightens existing cultural and nationalistic tensions, leading to increased misinformation and polarization among American social media users, potentially worsening global relations.",
+          "profit": {
+            "idea": "Invest in XAR",
+            "explanation": "Geopolitical tensions may increase demand for aerospace and defense investments."
           },
           "children": []
         }
       ]
     },
     {
-      "expert": "econ",
-      "outcome": "The ban on TikTok reduces US-China digital trade.",
-      "explanation": "This ban disrupts cross-border data flows and prompts retaliatory actions from China, diminishing overall economic exchanges in the tech sector.",
+      "expert": null,
+      "outcome": "American users shift to other social platforms.",
+      "explanation": "With TikTok blocked, users quickly adopt alternatives like Instagram or YouTube, reshaping the social media market, influencing digital advertising revenues, and fostering new online communities.",
       "profit": {
-        "idea": "Invest in META",
-        "explanation": "META could benefit from reduced competition in social media due to the ban."
+        "idea": "Invest in SNAP",
+        "explanation": "Snap may benefit from users shifting to alternative platforms."
       },
       "children": [
         {
-          "expert": "geo",
-          "outcome": "China imposes retaliatory restrictions on US digital platforms.",
-          "explanation": "The US ban on TikTok heightens geopolitical tensions, prompting China to respond with countermeasures that further strain bilateral digital trade relations in the short term.",
+          "expert": null,
+          "outcome": "China retaliates by restricting US tech companies in its market.",
+          "explanation": "The US ban on TikTok escalates geopolitical tensions with China, prompting reciprocal measures that disrupt international trade and digital cooperation in the short term.",
           "profit": {
             "idea": "Invest in BABA",
-            "explanation": "Retaliatory restrictions may boost Chinese tech companies like Alibaba."
+            "explanation": "Chinese restrictions on US tech may benefit local firms like Alibaba."
           },
           "children": []
         },
         {
-          "expert": "econ",
-          "outcome": "Domestic social media companies gain more users and revenue in the US.",
-          "explanation": "The TikTok ban shifts user traffic to American platforms, increasing their market share and advertising income, which supports short-term job growth in the tech sector.",
+          "expert": null,
+          "outcome": "Competing social platforms experience higher advertising revenue.",
+          "explanation": "As American users shift to alternative platforms due to the TikTok ban, increased user traffic drives up ad sales and boosts the economic growth of these services in the short term.",
           "profit": {
             "idea": "Invest in META",
-            "explanation": "Growth in users and revenue for domestic social media could improve META's financial performance."
+            "explanation": "Higher ad revenue could enhance profits for social media companies."
           },
           "children": []
         },
         {
-          "expert": "tech",
-          "outcome": "US developers create alternative social media apps.",
-          "explanation": "The TikTok ban drives innovation in domestic technology, prompting developers to build secure platforms that enhance data privacy and compete with foreign apps, ultimately strengthening US digital infrastructure.",
+          "expert": null,
+          "outcome": "Social media platforms enhance their algorithms to better engage shifted users.",
+          "explanation": "As American users move to alternative platforms, companies invest in algorithm improvements for personalized content, boosting user retention and accelerating tech innovations in data handling and recommendations.",
+          "profit": {
+            "idea": "Invest in META",
+            "explanation": "Algorithm enhancements could improve user engagement and revenue for social media companies."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "American users form new online communities on alternative platforms.",
+          "explanation": "As TikTok is banned, users shift to other platforms, encouraging the creation of fresh social networks that enhance user engagement and reshape digital interactions in the short term.",
+          "profit": {
+            "idea": "Invest in RDDT",
+            "explanation": "Shifts to alternative platforms may increase demand for community-focused stocks."
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "expert": null,
+      "outcome": "Legal battles challenge the ban's enforcement.",
+      "explanation": "TikTok's owners and users file lawsuits against the ban, causing delays in its implementation and prompting debates on national security versus free speech in US courts.",
+      "profit": {
+        "idea": "Invest in SOCL",
+        "explanation": "Legal challenges may support social media sector performance."
+      },
+      "children": [
+        {
+          "expert": null,
+          "outcome": "International tensions escalate between the US and China.",
+          "explanation": "Legal battles over the TikTok ban heighten geopolitical friction, leading China to retaliate with restrictions on US tech firms and potentially disrupting global alliances.",
+          "profit": {
+            "idea": "Invest in LMT",
+            "explanation": "Geopolitical tensions may increase demand for defense contractors."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "The ban reduces advertising revenue for US businesses.",
+          "explanation": "Legal challenges to the ban's enforcement create uncertainty, prompting companies to shift marketing budgets away from TikTok and impacting short-term economic activity in digital sectors.",
+          "profit": {
+            "idea": "Invest in XLC",
+            "explanation": "XLC tracks communication services firms, which may face revenue challenges from advertising bans."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Tech companies develop alternative apps to replace TikTok.",
+          "explanation": "As legal battles hinder the ban's enforcement, technology firms innovate new platforms with enhanced privacy features to attract users and maintain market competition in social media.",
+          "profit": {
+            "idea": "Invest in META",
+            "explanation": "META may benefit from growth in alternative social media apps."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Social movements rally against the TikTok ban.",
+          "explanation": "Legal battles over the ban's enforcement raise awareness of free speech and privacy issues, prompting users and groups to mobilize protests and advocate for policy changes in the short term.",
           "profit": {
             "idea": "Invest in SOCL",
-            "explanation": "This ETF tracks social media companies, which could benefit from new app developments."
-          },
-          "children": []
-        },
-        {
-          "expert": "social",
-          "outcome": "US users have fewer opportunities to engage with Chinese culture online.",
-          "explanation": "The ban on TikTok disrupts cross-cultural interactions, leading to reduced exposure to diverse perspectives and potentially fostering greater social divides between the US and China in the short term.",
-          "profit": {
-            "idea": "Invest in FXI",
-            "explanation": "This ETF offers exposure to major Chinese companies involved in online services."
+            "explanation": "This ETF tracks social media companies, potentially benefiting from increased interest in platforms like TikTok."
           },
           "children": []
         }
       ]
     },
     {
-      "expert": "tech",
-      "outcome": "Users switch to alternative social media platforms.",
-      "explanation": "The US ban on TikTok forces users and creators to adopt other apps, spurring competition and innovation in the social media industry over the next few years.",
+      "expert": null,
+      "outcome": "Users gain better data privacy.",
+      "explanation": "The ban reduces risks of foreign data access through TikTok, prompting users to switch to platforms with enhanced security features and raising awareness of privacy protections.",
       "profit": {
-        "idea": "Invest in SNAP",
-        "explanation": "SNAP may benefit as users shift to alternative platforms."
+        "idea": "Invest in AAPL",
+        "explanation": "Apple prioritizes user data privacy, a growing focus in the tech industry."
       },
       "children": [
         {
-          "expert": "geo",
-          "outcome": "China retaliates by imposing bans on US social media platforms.",
-          "explanation": "This action escalates US-China tensions over tech sovereignty, potentially leading to broader trade disputes and shifts in global alliances as other countries align with one side.",
-          "profit": {
-            "idea": "Invest in TCEHY",
-            "explanation": "Tencent may benefit from increased usage due to bans on US platforms."
-          },
-          "children": []
-        },
-        {
-          "expert": "econ",
-          "outcome": "Rival social media platforms gain more advertising revenue.",
-          "explanation": "As users switch from TikTok due to the US ban, alternative platforms attract more advertisers seeking larger audiences, leading to increased economic activity in the short term.",
-          "profit": {
-            "idea": "Invest in SNAP",
-            "explanation": "Rival platforms gaining ad revenue may indicate growth opportunities for similar stocks."
-          },
-          "children": []
-        },
-        {
-          "expert": "tech",
-          "outcome": "Developers enhance alternative platforms with new features.",
-          "explanation": "The TikTok ban prompts tech firms to innovate quickly on competing apps to capture users, leading to improved algorithms and user experiences in the short term.",
-          "profit": {
-            "idea": "Invest in ARKK",
-            "explanation": "Platform enhancements may boost innovative tech companies in this ETF."
-          },
-          "children": []
-        },
-        {
-          "expert": "social",
-          "outcome": "Users build new online communities on alternative platforms.",
-          "explanation": "This shift fosters the rapid formation of fresh social networks and alters interaction patterns, helping users maintain their digital connections in the short term.",
-          "profit": {
-            "idea": "Invest in RDDT",
-            "explanation": "Growth in alternative online communities could increase demand for platforms like Reddit."
-          },
-          "children": []
-        }
-      ]
-    },
-    {
-      "expert": "social",
-      "outcome": "Users shift to alternative social media platforms.",
-      "explanation": "The ban on TikTok drives people to seek new ways to connect and share content, potentially altering social behaviors and community dynamics in the short term.",
-      "profit": {
-        "idea": "Invest in SNAP",
-        "explanation": "User shifts may increase demand for alternative social media platforms like Snapchat."
-      },
-      "children": [
-        {
-          "expert": "geo",
-          "outcome": "China imposes retaliatory bans on US social media platforms.",
-          "explanation": "The US ban on TikTok leads to heightened Sino-American tensions, prompting China to restrict American apps and potentially altering global digital alliances and trade dynamics.",
+          "expert": null,
+          "outcome": "China retaliates by restricting US tech companies.",
+          "explanation": "The US ban on TikTok escalates geopolitical tensions with China, prompting retaliatory measures that influence global data privacy standards and international trade relations in the short term.",
           "profit": {
             "idea": "Invest in KWEB",
-            "explanation": "This ETF focuses on Chinese internet firms, potentially benefiting from the bans."
+            "explanation": "This ETF focuses on Chinese tech stocks, potentially benefiting from US restrictions."
           },
           "children": []
         },
         {
-          "expert": "econ",
-          "outcome": "Alternative platforms gain more advertising revenue.",
-          "explanation": "As users shift from TikTok due to the ban, other platforms attract more traffic and ads, leading to short-term economic growth for those companies.",
+          "expert": null,
+          "outcome": "US tech companies expand their market share.",
+          "explanation": "The TikTok ban enhances data privacy, prompting users to switch to domestic alternatives and increasing economic activity in the US tech sector.",
           "profit": {
-            "idea": "Invest in SNAP",
-            "explanation": "Gains in ad revenue for alternative platforms could boost companies like Snapchat."
+            "idea": "Invest in QQQ",
+            "explanation": "US tech expansion may boost performance of Nasdaq-100 index ETF."
           },
           "children": []
         },
         {
-          "expert": "tech",
-          "outcome": "Alternative platforms innovate new features to retain users.",
-          "explanation": "As users shift from TikTok due to the ban, other platforms quickly develop enhanced algorithms and tools to compete, driving short-term advancements in social media technology and user experience.",
+          "expert": null,
+          "outcome": "Users adopt platforms with enhanced data privacy.",
+          "explanation": "The US ban on TikTok drives users to seek and use alternatives that emphasize stronger privacy measures, ultimately fostering better data protection practices in the tech industry.",
           "profit": {
-            "idea": "Invest in SNAP",
-            "explanation": "Innovation in features can help platforms like Snap grow user base."
+            "idea": "Invest in AAPL",
+            "explanation": "Rising demand for privacy-focused platforms could benefit Apple's stock."
           },
           "children": []
         },
         {
-          "expert": "social",
-          "outcome": "Users on alternative platforms build stronger niche communities.",
-          "explanation": "As users migrate from TikTok, they form tighter groups around shared interests, enhancing social bonds but potentially increasing echo chambers and polarization in online discussions.",
+          "expert": null,
+          "outcome": "Users demand stronger data privacy from apps.",
+          "explanation": "The US ban on TikTok heightens public awareness of data vulnerabilities, encouraging users to advocate for and adopt platforms with enhanced privacy features, fostering better overall data protection.",
           "profit": {
-            "idea": "Invest in RDDT",
-            "explanation": "Stronger niche communities could enhance value for platforms like Reddit."
+            "idea": "Invest in AAPL",
+            "explanation": "Apple focuses on user privacy features, which may grow with rising demands."
           },
           "children": []
         }

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 try:
     from rich.console import Console
@@ -9,13 +9,22 @@ except Exception:
     Panel = None  # type: ignore
 
 
+_LOG_BUFFER: List[str] = []
+
+
 def debug_log(enabled: bool, title: str, body: str) -> None:
-    if not enabled:
-        return
-    # Suppress raw prompts (system/user) to keep logs focused on agent outputs and moderator decisions
+    # Suppress raw prompts from both console and file
     if "Prompt" in title:
+        return
+    formatted = f"=== {title} ===\n{body}\n=== end {title} ==="
+    _LOG_BUFFER.append(formatted)
+    if not enabled:
         return
     if _console and Panel:
         _console.print(Panel.fit(body, title=title))
     else:
-        print(f"=== {title} ===\n{body}\n=== end {title} ===")
+        print(formatted)
+
+
+def get_logs_text() -> str:
+    return "\n\n".join(_LOG_BUFFER)

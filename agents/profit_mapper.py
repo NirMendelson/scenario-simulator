@@ -8,7 +8,7 @@ def map_profit_for_outcome(llm: BaseChatModel, outcome_text: str, debug: bool = 
     system = (
         "You suggest a concrete investment based on the outcome.\n"
         "Rules:\n"
-        "- idea MUST be: 'Invest in {TICKER or ETF or specific company stock}'.\n"
+        "- idea MUST be: 'Invest in {between 1 and 3 TICKER or ETF or specific company stock}'.\n"
         "- Do NOT suggest diversifying, shorting, hedging, or strategies. Only a single investable asset name/ticker.\n"
         "- Use plain language. Keep explanation under 18 words, neutral and educational.\n"
         "Return JSON ONLY with keys 'idea' and 'explanation'."
