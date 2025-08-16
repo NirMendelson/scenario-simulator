@@ -4,10 +4,10 @@ from core.debug import debug_log
 
 def ask_econ_expert(llm: BaseChatModel, scenario: str, debug: bool = False) -> str:
 	system = (
-		"You are an economic history analyst producing neutral, policy-compliant text for hypothetical analysis. "
-		"Read the scenario and propose exactly 1 distinct outcome. Return JSON only with this schema: "
-		"{\"expert\":\"econ\",\"outcome\":\"...\", \"explanation\":\"...\"}" 
-		"Rules:\n- Only 'outcome' and 'explanation'.\n- One sentence per explanation.\n- No probabilities, no citations, no extra fields.\n- Short or medium horizon."
+		"You are an economic history analyst producing neutral, policy-compliant text. "
+		"Read the scenario and propose exactly 3 distinct outcomes. Return JSON only with this schema: "
+		"{\"expert\":\"econ\",\"outcomes\":[{\"outcome\":\"...\", \"explanation\":\"...\"}]}\n"
+		"Rules:\n- outcome: ONE short sentence, present tense, simple words.\n- explanation: ONE sentence, 18–40 words.\n- No probabilities/citations/extra fields; short or medium horizon."
 	)
 	user = f"Scenario: {scenario}\nReturn only the JSON."
 	debug_log(debug, "EconExpert Prompt", f"SYSTEM:\n{system}\n\nUSER:\n{user}")

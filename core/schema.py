@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Profit(BaseModel):
@@ -29,7 +29,7 @@ class ExpertOutcome(BaseModel):
 
 
 class ExpertResponse(BaseModel):
-    expert: Literal["geo", "econ"]
+    expert: Literal["geo", "econ", "tech", "social"]
     outcomes: List[ExpertOutcome]
 
 
@@ -47,11 +47,11 @@ class ExpertSingleResponse(BaseModel):
 
 # Tree output
 class TreeNode(BaseModel):
-    expert: Literal["geo", "econ", "tech", "social"]
+    expert: Optional[Literal["geo", "econ", "tech", "social"]] = None
     outcome: str
     explanation: str
     profit: Optional[Profit] = None
-    children: List["TreeNode"] = []
+    children: List["TreeNode"] = Field(default_factory=list)
 
 
 class TreeResult(BaseModel):

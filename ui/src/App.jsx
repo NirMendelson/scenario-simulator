@@ -3,25 +3,19 @@ import ReactFlow, { Background, Controls, MarkerType, Handle, Position } from 'r
 import 'reactflow/dist/style.css'
 import dagre from 'dagre'
 
-const expertColor = (e) => ({
-  geo: '#e67e22',
-  econ: '#2ecc71',
-  tech: '#3498db',
-  social: '#f1c40f',
-  scenario: '#95a5a6',
-}[e] || '#7f8c8d')
+const primaryColor = '#58a6ff'
 
 function toTree(json) {
-  return {
-    scenario: json.scenario,
-    level1: (json.children || []).map((n, i) => ({ ...n, idx: i })),
+  if (json?.children) {
+    return { scenario: json.scenario, children: json.children }
   }
+  // fallback to flat 4 outcomes (no levels)
+  return { scenario: json.scenario, children: (json.selected_outcomes || []).map(o => ({ ...o, children: [] })) }
 }
 
-const nodeWidth = 320
-const nodeHeight = 60
+const nodeWidth = 360
 
-function layout(nodes, edges) {
+function layout(nodes, edges, nodeHeight) {
   const g = new dagre.graphlib.Graph()
   g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 120 })
   g.setDefaultEdgeLabel(() => ({}))
@@ -34,54 +28,84 @@ function layout(nodes, edges) {
   })
 }
 
-function makeFlowElements(data) {
+function measureMaxHeight(tree) {
+  const container = document.createElement('div')
+  container.style.position = 'absolute'
+  container.style.visibility = 'hidden'
+  container.style.width = `${nodeWidth - 20}px`
+  container.style.padding = '10px'
+  container.style.lineHeight = '16px'
+  container.style.fontSize = '12px'
+  container.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'
+  container.style.background = '#0b0e14'
+  document.body.appendChild(container)
+
+  const samples = []
+  samples.push({ title: 'Scenario', body: tree.scenario })
+  ;(tree.nodes || []).forEach((n) => samples.push({ title: 'Outcome', body: n.outcome }))
+
+  let max = 120
+  samples.forEach((s) => {
+    container.innerHTML = `<div style="margin-bottom:4px">${s.title}</div><div>${s.body}</div>`
+    const h = container.offsetHeight + 20
+    if (h > max) max = h
+  })
+
+  document.body.removeChild(container)
+  return Math.min(Math.max(max, 120), 320)
+}
+
+function makeFlowElements(data, nodeHeight) {
   const nodes = []
   const edges = []
 
-  // root
+  const commonNodeStyle = (border) => ({ background: '#0b0e14', border, color: '#fff', width: nodeWidth, height: nodeHeight })
+
   nodes.push({
     id: 'root',
-    data: { expert: 'scenario', title: 'Scenario', body: data.scenario },
-    style: { background: '#11131a', border: '1px solid #9aa1a9', color: '#fff', width: nodeWidth },
+    data: { title: 'Scenario', body: data.scenario },
+    style: { background: '#11131a', border: `1px solid ${primaryColor}`, color: '#fff', width: nodeWidth, height: nodeHeight },
     sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
   })
 
   const arrow = { type: MarkerType.ArrowClosed, color: '#e6eaf0' }
   const edgeStyle = { stroke: '#e6eaf0' }
 
-  data.level1.forEach((n, i) => {
+  // level 1
+  const level1 = data.children || []
+  level1.forEach((n, i) => {
     const id = `l1-${i}`
     nodes.push({
       id,
-      data: { expert: n.expert, title: `[${n.expert}]`, body: n.outcome, explanation: n.explanation },
-      style: { background: '#0b0e14', border: `1px solid ${expertColor(n.expert)}`, color: '#fff', width: nodeWidth },
+      data: { title: 'Outcome', body: n.outcome, explanation: n.explanation },
+      style: commonNodeStyle(`1px solid ${primaryColor}`),
       sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
     })
-    edges.push({ id: `e-root-${id}`, source: 'root', target: id, type: 'smoothstep', markerEnd: arrow, style: edgeStyle })
-
+    edges.push({ id: `e-root-${id}`, source: 'root', target: id, type: 'straight', markerEnd: arrow, style: edgeStyle })
+    // level 2 (leaves)
     ;(n.children || []).forEach((c, j) => {
       const cid = `l2-${i}-${j}`
       nodes.push({
         id: cid,
-        data: { expert: c.expert, title: `[${c.expert}]`, body: c.outcome, explanation: c.explanation, profit: c.profit },
-        style: { background: '#0b0e14', border: `1px solid ${expertColor(c.expert)}`, color: '#fff', width: nodeWidth },
+        data: { title: 'Outcome', body: `${c.outcome}\n${c.profit?.idea ? `(${c.profit.idea})` : ''}`.trim(), explanation: c.explanation, profit: c.profit },
+        style: commonNodeStyle(`1px solid ${primaryColor}`),
         sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
       })
-      edges.push({ id: `e-${id}-${cid}`, source: id, target: cid, type: 'smoothstep', markerEnd: arrow, style: edgeStyle })
+      edges.push({ id: `e-${id}-${cid}`, source: id, target: cid, type: 'straight', markerEnd: arrow, style: edgeStyle })
     })
   })
 
-  const laidOut = layout(nodes, edges)
+  const laidOut = layout(nodes, edges, nodeHeight)
   return { nodes: laidOut, edges }
 }
 
 function NodeRenderer({ data }) {
-  const color = expertColor(data.expert)
+  const color = primaryColor
   return (
-    <div style={{ padding: 10 }}>
+    <div style={{ height: '100%', padding: 10, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       <Handle type="target" position={Position.Top} style={{ background: color, border: 'none' }} />
-      <div style={{ fontSize: 12, marginBottom: 4, color }}><b>{data.title}</b></div>
-      <div style={{ fontSize: 12, color: '#f2f5f8', lineHeight: '16px' }}>{data.body}</div>
+      <div style={{ fontSize: 12, marginBottom: 4, color, textAlign: 'center' }}><b>{data.title}</b></div>
+      <div style={{ fontSize: 12, color: '#f2f5f8', lineHeight: '16px', textAlign: 'center', whiteSpace:'pre-wrap' }}>{data.body}</div>
       <Handle type="source" position={Position.Bottom} style={{ background: color, border: 'none' }} />
     </div>
   )
@@ -90,6 +114,7 @@ function NodeRenderer({ data }) {
 export default function App() {
   const [json, setJson] = useState(null)
   const [elements, setElements] = useState({ nodes: [], edges: [] })
+  const [nodeHeight, setNodeHeight] = useState(120)
   const [selected, setSelected] = useState(null)
 
   useEffect(() => { fetch('/api/tree').then(r => r.json()).then(setJson).catch(console.error) }, [])
@@ -97,13 +122,14 @@ export default function App() {
   useEffect(() => {
     if (!json) return
     const tree = toTree(json)
-    setElements(makeFlowElements(tree))
+    const h = measureMaxHeight(tree)
+    setNodeHeight(h)
+    setElements(makeFlowElements(tree, h))
   }, [json])
 
   const onNodeClick = (_, node) => {
     const d = node.data || {}
     setSelected({
-      expert: d.expert,
       outcome: d.body,
       explanation: d.explanation,
       profitIdea: d.profit?.idea,
@@ -123,7 +149,6 @@ export default function App() {
         ) : (
           <>
             <h3 style={{ marginTop:0 }}>Details</h3>
-            <div style={{ marginBottom:8, color: expertColor(selected.expert) }}><b>[{selected.expert}]</b></div>
             <h4>Outcome</h4>
             <div style={{ whiteSpace:'pre-wrap' }}>{selected.outcome}</div>
             {selected.explanation && <>

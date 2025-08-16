@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
 
-from core.orchestrator import brainstorm_round
+from core.orchestrator import build_two_round_tree
 
 
 def parse_args() -> argparse.Namespace:
@@ -55,7 +55,7 @@ def main() -> None:
 
     llm = _create_llm(args.model)
     scenario = args.seed or input("Insert scenario: ").strip()
-    tree_json = brainstorm_round(llm, scenario, debug=bool(args.debug))
+    tree_json = build_two_round_tree(llm, scenario, debug=bool(args.debug))
     print(tree_json)
 
     out_path = Path(args.out)
