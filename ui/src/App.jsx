@@ -1,167 +1,154 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import Tree from 'react-d3-tree'
+import React, { useEffect, useMemo, useState } from 'react'
+import ReactFlow, { Background, Controls, MarkerType, Handle, Position } from 'reactflow'
+import 'reactflow/dist/style.css'
+import dagre from 'dagre'
 
-const circleFill = (expert) => {
-  switch (expert) {
-    case 'econ': return '#2ecc71' // green
-    case 'tech': return '#3498db' // blue
-    case 'geo': return '#e67e22'  // orange
-    case 'social': return '#f1c40f' // yellow
-    case 'scenario': return '#95a5a6' // grey
-    default: return '#7f8c8d'
+const expertColor = (e) => ({
+  geo: '#e67e22',
+  econ: '#2ecc71',
+  tech: '#3498db',
+  social: '#f1c40f',
+  scenario: '#95a5a6',
+}[e] || '#7f8c8d')
+
+function toTree(json) {
+  return {
+    scenario: json.scenario,
+    level1: (json.children || []).map((n, i) => ({ ...n, idx: i })),
   }
 }
 
-function toD3(treeJson) {
-  const root = {
-    name: '',
-    attributes: { expert: 'scenario', outcome: treeJson.scenario, explanation: '', level: 0, idx: 0 },
-    children: (treeJson.children || []).map((level1, i) => ({
-      name: '',
-      attributes: { outcome: level1.outcome, explanation: level1.explanation, expert: level1.expert, level: 1, idx: i },
-      children: (level1.children || []).map((ch, j) => ({
-        name: '',
-        attributes: {
-          outcome: ch.outcome,
-          explanation: ch.explanation,
-          expert: ch.expert,
-          profitIdea: ch.profit?.idea,
-          profitExplanation: ch.profit?.explanation,
-          level: 2,
-          idx: j
-        }
-      }))
-    }))
-  }
-  return root
+const nodeWidth = 320
+const nodeHeight = 60
+
+function layout(nodes, edges) {
+  const g = new dagre.graphlib.Graph()
+  g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 120 })
+  g.setDefaultEdgeLabel(() => ({}))
+  nodes.forEach((n) => g.setNode(n.id, { width: nodeWidth, height: nodeHeight }))
+  edges.forEach((e) => g.setEdge(e.source, e.target))
+  dagre.layout(g)
+  return nodes.map((n) => {
+    const p = g.node(n.id)
+    return { ...n, position: { x: p.x - nodeWidth / 2, y: p.y - nodeHeight / 2 } }
+  })
+}
+
+function makeFlowElements(data) {
+  const nodes = []
+  const edges = []
+
+  // root
+  nodes.push({
+    id: 'root',
+    data: { expert: 'scenario', title: 'Scenario', body: data.scenario },
+    style: { background: '#11131a', border: '1px solid #9aa1a9', color: '#fff', width: nodeWidth },
+    sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
+  })
+
+  const arrow = { type: MarkerType.ArrowClosed, color: '#e6eaf0' }
+  const edgeStyle = { stroke: '#e6eaf0' }
+
+  data.level1.forEach((n, i) => {
+    const id = `l1-${i}`
+    nodes.push({
+      id,
+      data: { expert: n.expert, title: `[${n.expert}]`, body: n.outcome, explanation: n.explanation },
+      style: { background: '#0b0e14', border: `1px solid ${expertColor(n.expert)}`, color: '#fff', width: nodeWidth },
+      sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
+    })
+    edges.push({ id: `e-root-${id}`, source: 'root', target: id, type: 'smoothstep', markerEnd: arrow, style: edgeStyle })
+
+    ;(n.children || []).forEach((c, j) => {
+      const cid = `l2-${i}-${j}`
+      nodes.push({
+        id: cid,
+        data: { expert: c.expert, title: `[${c.expert}]`, body: c.outcome, explanation: c.explanation, profit: c.profit },
+        style: { background: '#0b0e14', border: `1px solid ${expertColor(c.expert)}`, color: '#fff', width: nodeWidth },
+        sourcePosition: 'bottom', targetPosition: 'top', position: { x: 0, y: 0 },
+      })
+      edges.push({ id: `e-${id}-${cid}`, source: id, target: cid, type: 'smoothstep', markerEnd: arrow, style: edgeStyle })
+    })
+  })
+
+  const laidOut = layout(nodes, edges)
+  return { nodes: laidOut, edges }
+}
+
+function NodeRenderer({ data }) {
+  const color = expertColor(data.expert)
+  return (
+    <div style={{ padding: 10 }}>
+      <Handle type="target" position={Position.Top} style={{ background: color, border: 'none' }} />
+      <div style={{ fontSize: 12, marginBottom: 4, color }}><b>{data.title}</b></div>
+      <div style={{ fontSize: 12, color: '#f2f5f8', lineHeight: '16px' }}>{data.body}</div>
+      <Handle type="source" position={Position.Bottom} style={{ background: color, border: 'none' }} />
+    </div>
+  )
 }
 
 export default function App() {
-  const [data, setData] = useState(null)
+  const [json, setJson] = useState(null)
+  const [elements, setElements] = useState({ nodes: [], edges: [] })
   const [selected, setSelected] = useState(null)
-  const containerRef = useRef(null)
-  const [translate, setTranslate] = useState({ x: 520, y: 140 })
+
+  useEffect(() => { fetch('/api/tree').then(r => r.json()).then(setJson).catch(console.error) }, [])
 
   useEffect(() => {
-    fetch('/api/tree').then(r => r.json()).then(setData).catch(console.error)
-  }, [])
+    if (!json) return
+    const tree = toTree(json)
+    setElements(makeFlowElements(tree))
+  }, [json])
 
-  const d3Data = useMemo(() => data ? toD3(data) : null, [data])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-    const { width } = containerRef.current.getBoundingClientRect()
-    setTranslate({ x: Math.max(320, width * 0.28), y: 160 })
-  }, [containerRef.current])
-
-  if (!data) return <div className="container"><div className="panel">Loading...</div></div>
-
-  const handleNodeClick = (nodeDatum) => {
-    const a = nodeDatum?.attributes || {}
+  const onNodeClick = (_, node) => {
+    const d = node.data || {}
     setSelected({
-      expert: a.expert,
-      outcome: a.outcome || data.scenario,
-      explanation: a.explanation,
-      profitIdea: a.profitIdea,
-      profitExplanation: a.profitExplanation
+      expert: d.expert,
+      outcome: d.body,
+      explanation: d.explanation,
+      profitIdea: d.profit?.idea,
+      profitExplanation: d.profit?.explanation,
     })
   }
 
-  const labelBox = (level) => {
-    if (level === 0) return { width: 520, height: 48 }
-    if (level === 1) return { width: 360, height: 48 }
-    return { width: 320, height: 48 }
-  }
-
-  // Compute label position relative to the node
-  const labelPos = (level, idx, width, height) => {
-    if (level === 0) {
-      return { x: -width / 2, y: -(height), align: 'center' }
-    }
-    if (level === 1) {
-      const left = idx % 4 < 2
-      return left
-        ? { x: -(width + 16), y: -40, align: 'right' }
-        : { x: 16, y: -40, align: 'left' }
-    }
-    // leaves: alternate rows by index to reduce overlap
-    const topY = 22
-    const lowY = 72  // increased spacing between rows
-    if (idx === 0) {
-      return { x: -(width + 12), y: topY, align: 'right' }
-    }
-    if (idx === 1) {
-      return { x: -width / 2, y: lowY, align: 'center' }
-    }
-    if (idx === 2) {
-      return { x: -width / 2, y: topY, align: 'center' }
-    }
-    return { x: 12, y: lowY, align: 'left' }
-  }
-
   return (
-    <div className="container">
-      <div className="panel">
+    <div className="container" style={{ display: 'flex', height: '100%' }}>
+      <div className="panel" style={{ width: 420, padding: 16, borderRight: '1px solid #2a2f3a', background: '#11131a', color: '#fff', overflow: 'auto' }}>
         {!selected ? (
           <>
             <h3 style={{ marginTop:0 }}>Scenario</h3>
-            <div className="mono" style={{ whiteSpace:'pre-wrap' }}>{data.scenario}</div>
+            <div style={{ fontFamily:'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace', whiteSpace:'pre-wrap' }}>{json?.scenario || ''}</div>
             <p style={{ opacity:.85 }}>Click a node to see full details.</p>
           </>
         ) : (
           <>
             <h3 style={{ marginTop:0 }}>Details</h3>
+            <div style={{ marginBottom:8, color: expertColor(selected.expert) }}><b>[{selected.expert}]</b></div>
             <h4>Outcome</h4>
-            <div className="mono" style={{ whiteSpace:'pre-wrap' }}>{selected.outcome}</div>
+            <div style={{ whiteSpace:'pre-wrap' }}>{selected.outcome}</div>
             {selected.explanation && <>
               <h4>Explanation</h4>
-              <div className="mono" style={{ whiteSpace:'pre-wrap' }}>{selected.explanation}</div>
+              <div style={{ whiteSpace:'pre-wrap' }}>{selected.explanation}</div>
             </>}
             {selected.profitIdea && <>
               <h4>Profit idea</h4>
-              <div className="mono">{selected.profitIdea}</div>
-              {selected.profitExplanation && <div className="mono" style={{ whiteSpace:'pre-wrap', opacity:.95 }}>{selected.profitExplanation}</div>}
+              <div>{selected.profitIdea}</div>
+              {selected.profitExplanation && <div style={{ opacity:.95 }}>{selected.profitExplanation}</div>}
             </>}
           </>
         )}
       </div>
-      <div className="tree" ref={containerRef}>
-        <Tree
-          data={d3Data}
-          orientation="vertical"
-          separation={{ siblings: 1.8, nonSiblings: 2.2 }}
-          translate={translate}
-          zoomable
-          scaleExtent={{ min: 0.1, max: 8 }}
-          pathFunc="straight"
-          onNodeClick={handleNodeClick}
-          styles={{
-            links: { stroke: '#ffffff' },
-            nodes: {
-              node: { circle: { stroke: '#ffffff', strokeWidth: 1.2 } },
-              leafNode: { circle: { stroke: '#ffffff', strokeWidth: 1.0 } }
-            }
-          }}
-          renderCustomNodeElement={({ nodeDatum }) => {
-            const a = nodeDatum.attributes || {}
-            const fill = circleFill(a.expert)
-            const text = a.outcome
-            const { width, height } = labelBox(a.level)
-            const { x, y, align } = labelPos(a.level, a.idx, width, height)
-            return (
-              <g onClick={() => handleNodeClick(nodeDatum)} style={{ cursor: 'pointer' }}>
-                <circle r={12} fill={fill} />
-                {text && (
-                  <foreignObject x={x} y={y} width={width} height={height}>
-                    <div style={{ color:'#f2f5f8', fontSize:12, lineHeight:'16px', textAlign: align, overflow:'hidden', display:'-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                      {text}
-                    </div>
-                  </foreignObject>
-                )}
-              </g>
-            )
-          }}
-        />
+      <div className="tree" style={{ flex: 1, background:'#0b0e14' }}>
+        <ReactFlow
+          nodes={elements.nodes.map(n => ({ ...n, type: 'default' }))}
+          edges={elements.edges}
+          nodeTypes={{ default: NodeRenderer }}
+          fitView
+          onNodeClick={onNodeClick}
+        >
+          <Background gap={16} color="#2a2f3a" />
+          <Controls position="bottom-right" />
+        </ReactFlow>
       </div>
     </div>
   )
