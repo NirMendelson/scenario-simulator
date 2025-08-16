@@ -76,27 +76,27 @@ export default function App() {
   // Compute label position relative to the node
   const labelPos = (level, idx, width, height) => {
     if (level === 0) {
-      // root: centered above
       return { x: -width / 2, y: -(height), align: 'center' }
     }
     if (level === 1) {
-      // first level: 0,1 to left; 2,3 to right
       const left = idx % 4 < 2
       return left
         ? { x: -(width + 16), y: -40, align: 'right' }
         : { x: 16, y: -40, align: 'left' }
     }
-    // leaves: below; special alignment by relative order under the parent (0..3)
+    // leaves: alternate rows by index to reduce overlap
+    const topY = 22
+    const lowY = 72  // increased spacing between rows
     if (idx === 0) {
-      // leftmost: below and to the left
-      return { x: -(width + 12), y: 22, align: 'right' }
+      return { x: -(width + 12), y: topY, align: 'right' }
     }
-    if (idx === 3) {
-      // rightmost: below and to the right
-      return { x: 12, y: 22, align: 'left' }
+    if (idx === 1) {
+      return { x: -width / 2, y: lowY, align: 'center' }
     }
-    // middle two: centered below
-    return { x: -width / 2, y: 22, align: 'center' }
+    if (idx === 2) {
+      return { x: -width / 2, y: topY, align: 'center' }
+    }
+    return { x: 12, y: lowY, align: 'left' }
   }
 
   return (
