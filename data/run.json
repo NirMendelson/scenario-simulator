@@ -1,0 +1,52 @@
+{
+  "seed": "In the next 6-12 months, the United States and China engage in a series of escalating trade tariffs, leading to significant disruptions in global supply chains and increased inflation rates worldwide.",
+  "nodes": [
+    {
+      "id": "2e691fb8",
+      "parent_id": null,
+      "text": "In the next 6-12 months, the United States and China engage in a series of escalating trade tariffs, leading to significant disruptions in global supply chains and increased inflation rates worldwide.",
+      "type": "seed",
+      "profit": null
+    },
+    {
+      "id": "2edf831f",
+      "parent_id": "2e691fb8",
+      "text": "Tariff impact – US steel and aluminum exports to China decrease by $5–8B, affecting global prices within 6 months.",
+      "type": "outcome",
+      "profit": {
+        "idea": "Diversify supply chains to mitigate tariff impacts.",
+        "explanation": "By sourcing materials from alternative countries, businesses can reduce dependency on affected markets and stabilize costs."
+      }
+    },
+    {
+      "id": "6069f2ac",
+      "parent_id": "2e691fb8",
+      "text": "Commodity price surge – Oil prices rise by $10–15 per barrel as Middle Eastern producers limit supply in response to trade tensions (6–9 months).",
+      "type": "outcome",
+      "profit": {
+        "idea": "Diversify supply sources to mitigate risks.",
+        "explanation": "By sourcing oil from a wider range of suppliers, businesses can reduce dependency on Middle Eastern producers and stabilize costs."
+      }
+    },
+    {
+      "id": "cea382d3",
+      "parent_id": "2e691fb8",
+      "text": "Agricultural shifts – US wheat and rice exports to Asia drop by $3–5B, leading to increased domestic prices within 12 months.",
+      "type": "outcome",
+      "profit": {
+        "idea": "Diversify export markets for wheat and rice.",
+        "explanation": "Expanding into emerging markets can mitigate losses from reduced exports to Asia and stabilize revenue."
+      }
+    },
+    {
+      "id": "b05dbcd6",
+      "parent_id": "2e691fb8",
+      "text": "Consumer electronics slowdown – Samsung and LG face a 10–15% decline in sales revenue due to rising tariffs on components (9–12 months).",
+      "type": "outcome",
+      "profit": {
+        "idea": "Diversify supply chain sources to mitigate tariff impacts.",
+        "explanation": "By sourcing components from various suppliers, companies can reduce dependency on affected regions and stabilize costs."
+      }
+    }
+  ]
+}
