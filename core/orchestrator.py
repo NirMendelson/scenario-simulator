@@ -8,91 +8,75 @@ from core.schema import TreeNode, TreeResult, Profit
 from agents.profit_mapper import map_profit_for_outcome
 from core.debug import debug_log
 
-from agents.geo_expert import ask_geo_expert
-from agents.econ_expert import ask_econ_expert
-from agents.tech_expert import ask_tech_expert
-from agents.social_expert import ask_social_expert
-from agents.moderator import moderate_and_select
+from agents.a2a import expert_propose, expert_critique, expert_revise, EXPERTS
 
 
 def brainstorm_round(llm: BaseChatModel, scenario: str, debug: bool = False) -> str:
-	geo_json = ask_geo_expert(llm, scenario, debug=debug)
-	econ_json = ask_econ_expert(llm, scenario, debug=debug)
-	tech_json = ask_tech_expert(llm, scenario, debug=debug)
-	social_json = ask_social_expert(llm, scenario, debug=debug)
-	final_json = moderate_and_select(geo_json, econ_json, tech_json, social_json, scenario, llm=llm, debug=debug)
-	return final_json
+	# Produce 4 outcomes via A2A (no moderator)
+	items = _run_a2a_round(llm, scenario, parent=None, debug=debug)
+	from core.schema import FinalSelection, ExpertOutcome
+	selected = [ExpertOutcome(outcome=i["outcome"], explanation=i["explanation"]) for i in items]
+	return json.dumps(FinalSelection(scenario=scenario, selected_outcomes=selected).model_dump(), ensure_ascii=False, indent=2)
 
 
 
-def _ask_single(llm: BaseChatModel, expert: str, prompt_context: str, debug: bool = False) -> TreeNode:
-	assert expert in {"geo", "econ", "tech", "social"}
-	titles = {
-		"geo": "geopolitical history analyst",
-		"econ": "economic history analyst",
-		"tech": "technology analyst",
-		"social": "social dynamics analyst",
-	}
-	system = (
-		f"You are a {titles[expert]} producing neutral, policy-compliant text. "
-		"Read the context and propose exactly 1 distinct outcome. Return JSON only with this schema: "
-		"{\"expert\":\"geo|econ|tech|social\",\"outcome\":\"...\", \"explanation\":\"...\"}\n"
-		"Rules:\n- outcome: ONE short sentence, present tense, simple words.\n- explanation: ONE sentence, 18–40 words.\n- No probabilities/citations/extra fields; short or medium horizon."
-	)
-	user = f"Expert: {expert}\nContext: {prompt_context}\nReturn only the JSON."
-	debug_log(debug, f"{expert.upper()} Single Prompt", f"SYSTEM:\n{system}\n\nUSER:\n{user}")
-	resp = llm.invoke([("system", system), ("user", user)])
-	text = (resp.content or "").strip()
-	debug_log(debug, f"{expert.upper()} Single Response", text)
-	# permissive parse
-	import json as _json
-	data = _json.loads(text)
-	return TreeNode(
-		expert=expert, outcome=str(data.get("outcome", "")).strip(), explanation=str(data.get("explanation", "")).strip(), children=[]
-	)
+def _run_a2a_round(llm: BaseChatModel, scenario: str, parent: str | None, debug: bool = False, critique_rounds: int = 1) -> List[dict]:
+	# Round 1: propose
+	proposed: dict[str, dict] = {}
+	for ex in EXPERTS:
+		proposed[ex] = expert_propose(llm, ex, scenario, parent=parent, debug=debug)
+	debug_log(debug, "A2A Proposed", json.dumps(proposed, ensure_ascii=False, indent=2))
+
+	current = proposed
+	for r in range(critique_rounds):
+		# Critique
+		critiques: dict[str, dict] = {}
+		for ex in EXPERTS:
+			peers = [{"expert": k, **v} for k, v in current.items() if k != ex]
+			critiques[ex] = expert_critique(llm, ex, scenario, my_outcome=current[ex], peer_outcomes=peers, parent=parent, debug=debug)
+		debug_log(debug, f"A2A Critiques R{r+1}", json.dumps(critiques, ensure_ascii=False, indent=2))
+
+		# Revise
+		all_list = [{"expert": k, **v} for k, v in current.items()]
+		revised: dict[str, dict] = {}
+		for ex in EXPERTS:
+			revised[ex] = expert_revise(llm, ex, scenario, all_outcomes=all_list, critiques=critiques.get(ex, {}), parent=parent, debug=debug)
+		current = revised
+		debug_log(debug, f"A2A Revised R{r+1}", json.dumps(current, ensure_ascii=False, indent=2))
+
+	# Return list in stable expert order
+	return [current[ex] for ex in EXPERTS]
 
 
 
 def build_two_round_tree(llm: BaseChatModel, scenario: str, debug: bool = False) -> str:
-	# Round 1 via LLM moderation: collect 3 outcomes per expert and pick distinct 4
-	geo_json = ask_geo_expert(llm, scenario, debug=debug)
-	econ_json = ask_econ_expert(llm, scenario, debug=debug)
-	tech_json = ask_tech_expert(llm, scenario, debug=debug)
-	social_json = ask_social_expert(llm, scenario, debug=debug)
-	from core.schema import FinalSelection
-	import json as _json
-	level1_json = moderate_and_select(geo_json, econ_json, tech_json, social_json, scenario, llm=llm, debug=debug)
-	fs: FinalSelection = FinalSelection(**_json.loads(level1_json))
-	level1 = [TreeNode(expert=None, outcome=o.outcome, explanation=o.explanation, profit=o.profit) for o in fs.selected_outcomes]
+	# Level 1 via A2A
+	items_l1 = _run_a2a_round(llm, scenario, parent=None, debug=debug, critique_rounds=1)
+	level1: List[TreeNode] = [
+		TreeNode(expert=None, outcome=i["outcome"], explanation=i["explanation"], children=[])
+		for i in items_l1
+	]
 
-	# Round 2: for each level-1, all 4 experts add one child, then LLM-moderate siblings
-	for parent in level1:
-		draft_children = [
-			_ask_single(llm, "geo", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
-			_ask_single(llm, "econ", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
-			_ask_single(llm, "tech", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
-			_ask_single(llm, "social", f"Parent outcome: {parent.outcome}\nScenario: {scenario}", debug=debug),
-		]
-		# LLM sibling moderation
-		from json import dumps as _dumps, loads as _loads
-		step_system = (
-			"You moderate child outcomes for a parent. Remove or merge near-duplicates and anything that restates the parent. "
-			"Return exactly 4 distinct children. Output only JSON: {\"children\":[{\"outcome\":\"...\",\"explanation\":\"...\"}]}"
-		)
-		step_user = f"Parent: {parent.outcome}\nCandidates: " + _dumps([{ "outcome": c.outcome, "explanation": c.explanation } for c in draft_children], ensure_ascii=False)
-		resp = llm.invoke([("system", step_system), ("user", step_user)])
+	# Profit mapping for level 1 nodes
+	for node in level1:
+		p = map_profit_for_outcome(llm, node.outcome, debug=debug)
 		try:
-			mod_children = _loads(resp.content or "").get("children", [])
+			node.profit = p if isinstance(p, Profit) else Profit(**p)
 		except Exception:
-			mod_children = [{ "outcome": c.outcome, "explanation": c.explanation } for c in draft_children]
-		children = [TreeNode(expert=None, outcome=mc.get("outcome",""), explanation=mc.get("explanation","")) for mc in mod_children][:4]
-		# Profit map each leaf
-		for leaf in children:
+			pass
+
+	# Level 2 via A2A per parent + profit mapping
+	for parent in level1:
+		items_l2 = _run_a2a_round(llm, scenario, parent=parent.outcome, debug=debug, critique_rounds=1)
+		children: List[TreeNode] = []
+		for i in items_l2:
+			leaf = TreeNode(expert=None, outcome=i["outcome"], explanation=i["explanation"], children=[])
 			p = map_profit_for_outcome(llm, leaf.outcome, debug=debug)
 			try:
 				leaf.profit = p if isinstance(p, Profit) else Profit(**p)
 			except Exception:
 				pass
+			children.append(leaf)
 		parent.children = children
 
 	result = TreeResult(scenario=scenario, children=level1)

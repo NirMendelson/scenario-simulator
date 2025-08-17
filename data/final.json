@@ -3,152 +3,50 @@
   "children": [
     {
       "expert": null,
-      "outcome": "US-China relations worsen over the ban.",
-      "explanation": "The TikTok ban heightens tensions, leading China to retaliate with restrictions on American tech firms and escalating trade conflicts, including disruptions to global supply chains.",
+      "outcome": "China expels US diplomats over TikTok ban.",
+      "explanation": "The US ban on TikTok drives China to expel US diplomats, sparking a diplomatic crisis that reshapes alliances and accelerates global efforts to regulate cross-border data flows.",
       "profit": {
-        "idea": "Invest in XAR",
-        "explanation": "Worsening relations may boost demand for defense sector stocks."
+        "idea": "Invest in META",
+        "explanation": "Geopolitical tensions may increase demand for US-based social media alternatives."
       },
       "children": [
         {
           "expert": null,
-          "outcome": "China retaliates by imposing restrictions on US technology exports.",
-          "explanation": "The US ban on TikTok escalates geopolitical tensions, leading China to counter with trade barriers that could disrupt global tech supply chains and influence alliances.",
-          "profit": {
-            "idea": "Invest in GLD",
-            "explanation": "Gold is often viewed as a safe haven during geopolitical tensions."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "Trade between the US and China declines sharply.",
-          "explanation": "The TikTok ban escalates economic tensions, leading to retaliatory measures that reduce bilateral trade volumes and disrupt supply chains in the short term.",
-          "profit": {
-            "idea": "Invest in GLD",
-            "explanation": "Declining trade can increase demand for gold as a safe-haven asset."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "Tech companies develop secure alternatives to TikTok.",
-          "explanation": "The US ban on TikTok prompts domestic tech firms to innovate new social media platforms with enhanced data privacy features, fostering competition and reducing reliance on foreign apps in the short term.",
-          "profit": {
-            "idea": "Invest in META",
-            "explanation": "META's social platforms could benefit from demand for secure TikTok alternatives."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "Social divisions grow as US users express anti-China sentiment online.",
-          "explanation": "This outcome arises because the TikTok ban heightens existing cultural and nationalistic tensions, leading to increased misinformation and polarization among American social media users, potentially worsening global relations.",
+          "outcome": "US deploys naval forces to the South China Sea.",
+          "explanation": "The US escalates by deploying naval forces to the South China Sea, challenging Chinese territorial claims and rallying allies like Japan and Australia to counter regional aggression.",
           "profit": {
             "idea": "Invest in XAR",
-            "explanation": "Geopolitical tensions may increase demand for aerospace and defense investments."
-          },
-          "children": []
-        }
-      ]
-    },
-    {
-      "expert": null,
-      "outcome": "American users shift to other social platforms.",
-      "explanation": "With TikTok blocked, users quickly adopt alternatives like Instagram or YouTube, reshaping the social media market, influencing digital advertising revenues, and fostering new online communities.",
-      "profit": {
-        "idea": "Invest in SNAP",
-        "explanation": "Snap may benefit from users shifting to alternative platforms."
-      },
-      "children": [
-        {
-          "expert": null,
-          "outcome": "China retaliates by restricting US tech companies in its market.",
-          "explanation": "The US ban on TikTok escalates geopolitical tensions with China, prompting reciprocal measures that disrupt international trade and digital cooperation in the short term.",
-          "profit": {
-            "idea": "Invest in BABA",
-            "explanation": "Chinese restrictions on US tech may benefit local firms like Alibaba."
+            "explanation": "Geopolitical tensions may increase demand for defense sector assets."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "Competing social platforms experience higher advertising revenue.",
-          "explanation": "As American users shift to alternative platforms due to the TikTok ban, increased user traffic drives up ad sales and boosts the economic growth of these services in the short term.",
+          "outcome": "China freezes US bank assets in China.",
+          "explanation": "China freezes US bank assets to intensify economic retaliation beyond tariffs, disrupting American financial flows and pressuring the US to reverse the TikTok ban through targeted financial leverage.",
           "profit": {
-            "idea": "Invest in META",
-            "explanation": "Higher ad revenue could enhance profits for social media companies."
+            "idea": "Invest in GLD",
+            "explanation": "Gold often serves as a safe haven during geopolitical tensions."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "Social media platforms enhance their algorithms to better engage shifted users.",
-          "explanation": "As American users move to alternative platforms, companies invest in algorithm improvements for personalized content, boosting user retention and accelerating tech innovations in data handling and recommendations.",
+          "outcome": "US leads global coalition to secure AI supply chains from China.",
+          "explanation": "The US spearheads an international coalition to fortify AI supply chains against Chinese influence, advancing technological sovereignty and fostering allied innovation hubs to counter ongoing geopolitical rivalries.",
           "profit": {
-            "idea": "Invest in META",
-            "explanation": "Algorithm enhancements could improve user engagement and revenue for social media companies."
+            "idea": "Invest in NVDA",
+            "explanation": "Securing AI supply chains may boost US tech firms like NVIDIA."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "American users form new online communities on alternative platforms.",
-          "explanation": "As TikTok is banned, users shift to other platforms, encouraging the creation of fresh social networks that enhance user engagement and reshape digital interactions in the short term.",
-          "profit": {
-            "idea": "Invest in RDDT",
-            "explanation": "Shifts to alternative platforms may increase demand for community-focused stocks."
-          },
-          "children": []
-        }
-      ]
-    },
-    {
-      "expert": null,
-      "outcome": "Legal battles challenge the ban's enforcement.",
-      "explanation": "TikTok's owners and users file lawsuits against the ban, causing delays in its implementation and prompting debates on national security versus free speech in US courts.",
-      "profit": {
-        "idea": "Invest in SOCL",
-        "explanation": "Legal challenges may support social media sector performance."
-      },
-      "children": [
-        {
-          "expert": null,
-          "outcome": "International tensions escalate between the US and China.",
-          "explanation": "Legal battles over the TikTok ban heighten geopolitical friction, leading China to retaliate with restrictions on US tech firms and potentially disrupting global alliances.",
+          "outcome": "US cancels student visa programs for Chinese nationals.",
+          "explanation": "US cancels student visa programs to escalate beyond diplomatic expulsions, targeting educational ties and fostering domestic innovation while pressuring China on the TikTok issue without direct economic confrontation.",
           "profit": {
             "idea": "Invest in LMT",
-            "explanation": "Geopolitical tensions may increase demand for defense contractors."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "The ban reduces advertising revenue for US businesses.",
-          "explanation": "Legal challenges to the ban's enforcement create uncertainty, prompting companies to shift marketing budgets away from TikTok and impacting short-term economic activity in digital sectors.",
-          "profit": {
-            "idea": "Invest in XLC",
-            "explanation": "XLC tracks communication services firms, which may face revenue challenges from advertising bans."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "Tech companies develop alternative apps to replace TikTok.",
-          "explanation": "As legal battles hinder the ban's enforcement, technology firms innovate new platforms with enhanced privacy features to attract users and maintain market competition in social media.",
-          "profit": {
-            "idea": "Invest in META",
-            "explanation": "META may benefit from growth in alternative social media apps."
-          },
-          "children": []
-        },
-        {
-          "expert": null,
-          "outcome": "Social movements rally against the TikTok ban.",
-          "explanation": "Legal battles over the ban's enforcement raise awareness of free speech and privacy issues, prompting users and groups to mobilize protests and advocate for policy changes in the short term.",
-          "profit": {
-            "idea": "Invest in SOCL",
-            "explanation": "This ETF tracks social media companies, potentially benefiting from increased interest in platforms like TikTok."
+            "explanation": "Geopolitical tensions may increase defense sector demand for companies like Lockheed Martin."
           },
           "children": []
         }
@@ -156,50 +54,152 @@
     },
     {
       "expert": null,
-      "outcome": "Users gain better data privacy.",
-      "explanation": "The ban reduces risks of foreign data access through TikTok, prompting users to switch to platforms with enhanced security features and raising awareness of privacy protections.",
+      "outcome": "US investors fund billions in new social media ventures.",
+      "explanation": "The TikTok ban drives investors to channel massive capital into emerging US social media startups, accelerating innovation, creating thousands of jobs, and boosting overall economic productivity.",
       "profit": {
-        "idea": "Invest in AAPL",
-        "explanation": "Apple prioritizes user data privacy, a growing focus in the tech industry."
+        "idea": "Invest in SOCL",
+        "explanation": "Increased funding in social media suggests potential sector growth."
       },
       "children": [
         {
           "expert": null,
-          "outcome": "China retaliates by restricting US tech companies.",
-          "explanation": "The US ban on TikTok escalates geopolitical tensions with China, prompting retaliatory measures that influence global data privacy standards and international trade relations in the short term.",
+          "outcome": "US apps secure alliances with Asian governments against Chinese tech",
+          "explanation": "The investor funding propels US apps to form strategic partnerships in Asia, countering Chinese influence and bolstering US global dominance in digital infrastructure and data security.",
           "profit": {
-            "idea": "Invest in KWEB",
-            "explanation": "This ETF focuses on Chinese tech stocks, potentially benefiting from US restrictions."
+            "idea": "Invest in AAPL",
+            "explanation": "US tech alliances may enhance company growth and stock value."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "US tech companies expand their market share.",
-          "explanation": "The TikTok ban enhances data privacy, prompting users to switch to domestic alternatives and increasing economic activity in the US tech sector.",
+          "outcome": "Tech firms secure IPOs, boosting US GDP growth.",
+          "explanation": "US investors' billions in social media funding enable tech firms to launch IPOs, channeling capital into innovation and job creation that directly elevates overall US economic output and competitiveness.",
           "profit": {
             "idea": "Invest in QQQ",
-            "explanation": "US tech expansion may boost performance of Nasdaq-100 index ETF."
+            "explanation": "Tech IPOs can drive growth in Nasdaq-tracking ETFs, offering potential returns."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "Users adopt platforms with enhanced data privacy.",
-          "explanation": "The US ban on TikTok drives users to seek and use alternatives that emphasize stronger privacy measures, ultimately fostering better data protection practices in the tech industry.",
+          "outcome": "US startups integrate AI and VR into secure social platforms.",
+          "explanation": "US investors' funding drives startups to innovate with AI and VR technologies, creating secure platforms that transform user interactions and set new global standards for social media privacy and engagement.",
           "profit": {
-            "idea": "Invest in AAPL",
-            "explanation": "Rising demand for privacy-focused platforms could benefit Apple's stock."
+            "idea": "Invest in META",
+            "explanation": "META develops AI and VR technologies for social platforms."
           },
           "children": []
         },
         {
           "expert": null,
-          "outcome": "Users demand stronger data privacy from apps.",
-          "explanation": "The US ban on TikTok heightens public awareness of data vulnerabilities, encouraging users to advocate for and adopt platforms with enhanced privacy features, fostering better overall data protection.",
+          "outcome": "Youth activists coordinate nationwide protests via new apps.",
+          "explanation": "US investors' funding in social media ventures empowers youth activists to use these apps for organizing large-scale protests, sparking broader societal movements and policy reforms that address cultural and equity issues.",
           "profit": {
-            "idea": "Invest in AAPL",
-            "explanation": "Apple focuses on user privacy features, which may grow with rising demands."
+            "idea": "Invest in META",
+            "explanation": "Increased use of social apps for activism could boost company growth."
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "expert": null,
+      "outcome": "Government funds AI-driven open-source video platforms.",
+      "explanation": "The US ban on TikTok drives federal investment in AI-enhanced, open-source social apps, accelerating domestic innovation, bolstering data privacy, and establishing new standards for secure digital communication worldwide.",
+      "profit": {
+        "idea": "Invest in NVDA",
+        "explanation": "NVIDIA's GPUs are key for AI processing in video platforms."
+      },
+      "children": [
+        {
+          "expert": null,
+          "outcome": "US shares AI platforms with allies to counter China.",
+          "explanation": "The US government's funding of AI-driven platforms enables technology sharing with key allies, fortifying global digital defenses and escalating tensions with China over data sovereignty and influence.",
+          "profit": {
+            "idea": "Invest in NVDA",
+            "explanation": "This may boost AI hardware demand due to US tech sharing."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "US tech firms export AI platforms, boosting international trade.",
+          "explanation": "Government funding propels US tech firms to innovate and export AI platforms globally, fostering new trade agreements and foreign investments that significantly elevate the US economy through increased exports and job creation in key sectors.",
+          "profit": {
+            "idea": "Invest in NVDA",
+            "explanation": "NVIDIA leads in AI hardware, potentially benefiting from US tech exports."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Silicon Valley teams deploy blockchain-enhanced AI video platforms.",
+          "explanation": "Leveraging government funding, Silicon Valley teams integrate blockchain with AI to build secure, open-source platforms that enhance user privacy and enable real-time content moderation against foreign threats.",
+          "profit": {
+            "idea": "Invest in NVDA",
+            "explanation": "NVIDIA leads in AI hardware, supporting blockchain innovations."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Communities integrate AI platforms into daily social activities, sparking reforms.",
+          "explanation": "Beyond mere adoption, communities leverage government-funded AI platforms for organizing local events and advocacy, resulting in widespread societal reforms that enhance civic engagement and cultural diversity across the US.",
+          "profit": {
+            "idea": "Invest in NVDA",
+            "explanation": "NVIDIA leads in AI hardware, potentially benefiting from community AI adoption."
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "expert": null,
+      "outcome": "Parents advocate for national social media safeguards.",
+      "explanation": "The US TikTok ban galvanizes parents to push for concrete national policies on data protection and youth safety, evolving from user adaptation to widespread societal activism against digital risks.",
+      "profit": {
+        "idea": "Invest in SOCL",
+        "explanation": "Advocacy for social media safeguards could influence related companies and ETF performance."
+      },
+      "children": [
+        {
+          "expert": null,
+          "outcome": "US allies enact global bans on foreign social media apps.",
+          "explanation": "Parents' advocacy sparks US-led diplomatic efforts, resulting in allies like the EU and UK imposing coordinated bans to mitigate espionage risks from platforms like TikTok.",
+          "profit": {
+            "idea": "Invest in META",
+            "explanation": "Bans on foreign apps may increase demand for US-based social media companies."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "US Treasury invests in domestic tech to counter foreign apps.",
+          "explanation": "Parents' advocacy drives the US Treasury to invest billions in local tech firms, creating high-tech jobs and fortifying economic independence from foreign social media dependencies.",
+          "profit": {
+            "idea": "Invest in QQQ",
+            "explanation": "QQQ ETF tracks US tech stocks, which could benefit from government investments in domestic tech."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Tech firms deploy blockchain for secure social media data.",
+          "explanation": "Parents' advocacy drives tech firms to implement blockchain technology across platforms, ensuring unbreakable user data encryption and real-time privacy controls to prevent foreign influences like TikTok.",
+          "profit": {
+            "idea": "Invest in BLOK",
+            "explanation": "Blockchain adoption in tech could drive growth for related ETFs."
+          },
+          "children": []
+        },
+        {
+          "expert": null,
+          "outcome": "Communities form local councils to enforce social media guidelines.",
+          "explanation": "Parents' advocacy catalyzes community-driven councils that actively monitor and regulate local social media use, fostering safer online environments through grassroots enforcement and education programs.",
+          "profit": {
+            "idea": "Invest in META",
+            "explanation": "Social media companies like Meta may adapt to new regulations, fostering growth."
           },
           "children": []
         }
